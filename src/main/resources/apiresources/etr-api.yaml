@@ -1,0 +1,110 @@
+openapi: 3.0.1
+
+info:
+  version: 1.0.0  
+  title: ETR 407 - Toll calculator service
+  description: Service to estimate the toll charge based on entry & exit
+  
+tags:
+  - name: "ETR"
+  
+paths:
+
+  /tollCalculatorService/calculateTollCharge:
+    post:
+      summary: Service endpoint to calculate the Toll charge based on Entry & Exit
+      tags: 
+        - "ETR"
+      description: Calculates Toll charge based on Entry & Exit route info
+      operationId: calculateTollDetailsByRoute
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source: 
+                  type: string
+                destination: 
+                  type: string
+      
+      responses:
+        200:
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TollCalculatorResponse'
+        
+        400:
+          description: Bad request
+
+        404:
+          description: Resource Not Found
+        
+        500:
+          description: Internal Server Error
+        
+components:
+  schemas:
+    
+    Location:
+      description: Location Model
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        devcomment:
+          type: string
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Route'
+    
+    Route:
+      description: Route Model
+      type: object
+      properties:
+        toId:
+          type: integer
+        distance:
+          type: number
+        enter:
+          type: boolean
+          default: "true"
+        exit:
+          type: boolean
+          default: "true"
+    
+    TollCalculatorResponse:
+      description: Toll Calculator Response Model
+      type: object
+      properties:
+        entry:
+          type: string
+        exit:
+          type: string
+        distance:
+          type: number
+        charge:
+          type: number
+        error:
+          type: object
+          $ref: '#/components/schemas/ETRErrorResponse'
+          
+    ETRErrorResponse:
+      description: ETR Error Response Model
+      type: object
+      properties:
+        errcode:
+          type: integer
+        errMessage:
+          type: string

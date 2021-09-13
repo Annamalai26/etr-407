@@ -1,0 +1,12 @@
+spring:
+    application:
+        name: etr-toll-calculator-service
+        
+server:
+    port: 8082
+    
+etr:
+    407:
+        config-value:
+            toll-rate: 0.25
+            
